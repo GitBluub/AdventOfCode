@@ -1,13 +1,15 @@
 with open('input') as f:
     read_data = f.read().splitlines()
 
-depths = map(int, read_data)
+
+depths = list(map(int, read_data))
 a = None
 prev = 0
-for i in depths:
+measurements = [sum(depths[i:i + 3]) for i in range( len(depths) - 1) ]
+for i in measurements:
 	if a is None:
 		a = i
 		continue
 	prev += i > a
 	a = i
-print(prev)
+print(prev)	
