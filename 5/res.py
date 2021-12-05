@@ -24,5 +24,12 @@ for a, b in vents:
 		x1, x2 = min(x1, x2), max(x1, x2)
 		for i in range(x1, x2+1):
 			board[i][y1] += 1
+	else:
+		yneg = y1 > y2
+		xneg = x1 > x2
+		for i in range(abs(x2 - x1) + 1):
+			y = y1 - i if yneg else y1 + i
+			x = x1 - i if xneg else x1 + i
+			board[x][y] += 1
 r = sum(sum([1 for x in i if x >= 2]) for i in board)
 print(r)
