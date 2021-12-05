@@ -20,41 +20,47 @@ bingos = t
 lastN = None
 
 
+validBingo = []
+def bingoValid(bingo):
+	for line in bingo:
+		#print(" ".join(map(str, line)))
+		if all([a == -1 for a in line]):
+			validBingo = bingo
+			return True
+	rotated = zip(*bingo)
+	for cols in rotated:
+		#print(" ".join(map(str, cols)))
+		if all([a == -1 for a in cols]):
+			validBingo = bingo
+			return True
+	return False
+
+finished = []
+
 def bingosValid(bingos):
-	for bingo in bingos:
-		for line in bingo:
-			#print(" ".join(map(str, line)))
-			if all([a == -1 for a in line]):
-				return bingo
-		rotated = zip(*bingo)
-		for cols in rotated:
-			#print(" ".join(map(str, cols)))
-			if all([a == -1 for a in cols]):
-				return bingo
-		#if all([bingo[a][a] == -1 for a in range(len(bingo))]):
-		#	return bingo
-		#if all([bingo[a][len(bingo)-1-a] == -1 for a in range(len(bingo))]):
-		#	return bingo
-	return []
+	r = []
+	global finished
+	for j,i in enumerate(bingos):
+		isValid = bingoValid(i)
+		if isValid and j not in finished:
+			finished += [j]
+		r+=[isValid]
+	return all([bingoValid(bingo) for bingo in bingos])
 
 r=0
-numbersvalid = []
-validBingo = []
 for i in numbers:
-	validBingo = bingosValid(bingos)
-	if validBingo != []:
+	if bingosValid(bingos):
 		break
 	for k in range(len(bingos)):
 		bingo = bingos[k]
 		for j in range(len(bingo)):
 			bingo[j] = [x if x != i else -1 for x in bingo[j]]
 	lastN = i
-	numbersvalid += [lastN]
 	r += 1
-numbersvalid = numbersvalid[:-1]
-for line in validBingo:
+for line in bingos[finished[-1]]:
 	print(" ".join(map(str, line)))
-r = sum([sum([a if a != -1 else 0 for a in l]) for l in validBingo])
+print(finished)
+r = sum([sum([a if a != -1 else 0 for a in l]) for l in bingos[finished[-1]]])
 print(lastN)
 print(r)
 print(r * lastN)
