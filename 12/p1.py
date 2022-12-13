@@ -47,5 +47,48 @@ def path(y, x, done):
         minSteps = min(minSteps, path(y, x + 1, done + [(y, x)]))         
     #evaluated[f"{y} {x}"] = minSteps + 1
     return minSteps + 1
+
+def h(curr, end):
+    y, x = curr
+    y2, x2 = end
+    return abs(y2 - y) + abs(x2-x)
+
+def a_star(start, end):
+    openSet = {start}
+    gScore = {}
+    came_from = {}
+    gScore[start] = 0
+    fScore = {}
+    fScore[start] = h(start, end)
+    global m
+    while len(openSet):
+        minFscore = 999999999
+        curr = None
+        for x in openSet:
+            if x in fScore and fScore[x] < minFscore:
+                curr = x
+                minFscore = fScore[x]
+        openSet.remove(curr)
+        y,x = curr
+        if curr == end:
+            print(curr)
+            return gScore[curr]
+        neighbors = [(y+1,x), (y-1,x), (y,x+1), (y,x-1)]
+        for neighbor in neighbors:
+            y2, x2 = neighbor
+            if y2 < 0 or y2 >= len(m) or x2 < 0 or x2 >= len(m[0]):
+                continue
+            if  m[y2][x2] - m[y][x] < -1:
+                continue
+            tentaive_gScore = gScore[curr] + 1
+            if neighbor not in gScore or tentaive_gScore < gScore[neighbor]:
+                came_from[neighbor] = curr
+                gScore[neighbor] = tentaive_gScore
+                fScore[neighbor] = tentaive_gScore + h(neighbor, end)
+                if neighbor not in openSet:
+                    openSet.add(neighbor)
+        print(openSet)
+    print("a")
+
 a, b = start
-print(path(a, b, [(a,b)]))
+print(a_star(start, end))
